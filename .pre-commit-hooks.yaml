@@ -1,0 +1,6 @@
+-   id: ignore-files
+    name: Ignore undesirable files
+    description: This hook checks for undesired files (the ones inside .gitignore).
+    entry: ignore-files
+    language: python
+    types: [file]
