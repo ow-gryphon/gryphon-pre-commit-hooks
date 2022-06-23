@@ -17,7 +17,7 @@ setup(
     description='',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    py_modules=['main'],
+    py_modules=['hooks'],
     packages=find_packages(),
     install_requires=[requirements],
     python_requires='>=3.7',
@@ -28,6 +28,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        ignore-files=ignore_files:main
+        ignore-files=hooks.ignore_files:main
     '''
 )
