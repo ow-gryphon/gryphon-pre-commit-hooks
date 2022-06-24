@@ -1,7 +1,40 @@
 import argparse
+import logging
 from glob import glob
 from pathlib import Path
 from typing import Sequence
+
+from colorlog import ColoredFormatter
+
+formatter = ColoredFormatter(
+    "%(log_color)s%(message)s",
+    log_colors={
+        'WARNING': 'yellow',
+    }
+)
+
+
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(formatter)
+
+logger = logging.getLogger('gryphon')
+logger.addHandler(console_handler)
+
+substrings = [
+    '__pycache__/',
+    '.ipynb_checkpoint/',
+    '.venv/',
+    'dist/',
+    'build/',
+    '.eeg-info/',
+    '.git/',
+    '.github/',
+    'envs/',
+    '.pem',
+    '.yaml',
+    '.yml',
+    '.rc'
+]
 
 
 def main(argv: Sequence[str] = None):
@@ -24,28 +57,16 @@ def main(argv: Sequence[str] = None):
 
     files.extend(files_2)
 
-    failed = False
     unnecessary_files = []
     for f in args.filenames:
         f = str(f)
-        if (
-            '__pycache__/' in f or
-            '.ipynb_checkpoint/' in f or
-            '.venv/' in f or
-            'dist/' in f or
-            'build/' in f or
-            '.eeg-info/' in f or
-            '.git/' in f or
-            '.github/' in f or
-            'envs/' in f
-        ):
-            unnecessary_files.append(f)
-            failed = True
+        for s in substrings:
+            if s in f:
+                logger.warning(f"WARNING: File \"{f}\" was committed. "
+                               f"Check if you really want it inside your repository.")
+                unnecessary_files.append(f)
 
-    if failed:
-        raise SystemExit(1)
-    else:
-        raise SystemExit(0)
+    raise SystemExit(0)
 
 
 if __name__ == "__main__":
