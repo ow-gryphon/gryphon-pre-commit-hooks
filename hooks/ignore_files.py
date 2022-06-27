@@ -26,7 +26,7 @@ substrings = [
     '.venv/',
     'dist/',
     'build/',
-    '.eeg-info/',
+    '.egg-info/',
     '.git/',
     '.github/',
     'envs/',
@@ -62,9 +62,15 @@ def main(argv: Sequence[str] = None):
         f = str(f)
         for s in substrings:
             if s in f:
-                logger.warning(f"WARNING: File \"{f}\" was committed. "
-                               f"Check if you really want it inside your repository.")
                 unnecessary_files.append(f)
+
+    if len(unnecessary_files):
+        unnecessary_files = set(unnecessary_files)
+        list_string = '\n\t- '.join(unnecessary_files)
+        logger.warning(f"WARNING: Some files that might be unnecessary were committed. "
+                       f"Check if you really want them inside your repository:\n\n\t- {list_string}\n")
+
+    # TODO: docs about this
 
     raise SystemExit(0)
 
